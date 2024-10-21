@@ -1,4 +1,4 @@
-import 'package:expense_tracker/expenses_list.dart';
+import 'package:expense_tracker/widgets/expenses_list/expenses_list.dart';
 import 'package:expense_tracker/models/expense.dart';
 import 'package:flutter/material.dart';
 
@@ -30,9 +30,18 @@ class _ExprensesState extends State<Expenses> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Expenses Tracker'),
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.add),
+          ),
+        ],
+      ),
       body: Column(
         children: [
-          const Text('The Cart'),
+          const Text('The Chart'),
           // use Expanded so the flutte know how to render (sizing) a list of list
           Expanded(
             child: ExpensesList(expenses: _registeredExpenses),
