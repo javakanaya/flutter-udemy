@@ -10,10 +10,18 @@ class NewExpense extends StatefulWidget {
 }
 
 class _NewExpenseState extends State<NewExpense> {
-  var _enteredTitle = '';
+  // create an object for handling user input
+  final _titleController = TextEditingController();
+  final _amountController = TextEditingController();
 
-  void _saveTitleInput(String inputValue) {
-    _enteredTitle = inputValue;
+  // to dispose the TextEditingController when its not being used
+  // to avoid memory leaks
+  // call automaticly when the widget is destroyed
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _amountController.dispose();
+    super.dispose();
   }
 
   @override
@@ -23,19 +31,36 @@ class _NewExpenseState extends State<NewExpense> {
         child: Column(
           children: [
             TextField(
-              onChanged: _saveTitleInput,
+              controller: _titleController,
               maxLength: 50,
               decoration: const InputDecoration(
                 label: Text('Title'),
               ),
             ),
+            TextField(
+              controller: _amountController,
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(
+                prefixText: '\$',
+                label: Text('Amount'),
+              ),
+            ),
             Row(
               children: [
                 ElevatedButton(
-                    onPressed: () {
-                      print(_enteredTitle);
-                    },
-                    child: const Text('Save Expense'))
+                  onPressed: () {
+                    Navigator.pop(context);
+                    print("Cancel");
+                  },
+                  child: const Text('Cancel'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    print(_titleController.text);
+                    print(_amountController.text);
+                  },
+                  child: const Text('Save Expense'),
+                ),
               ],
             )
           ],
