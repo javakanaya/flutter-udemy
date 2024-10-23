@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
+
+final formatter = DateFormat.yMd();
 
 class NewExpense extends StatefulWidget {
   const NewExpense({super.key});
@@ -14,6 +16,7 @@ class _NewExpenseState extends State<NewExpense> {
   // create an object for handling user input
   final _titleController = TextEditingController();
   final _amountController = TextEditingController();
+  DateTime? _selectedDate;
 
   // to dispose the TextEditingController when its not being used
   // to avoid memory leaks
@@ -25,15 +28,18 @@ class _NewExpenseState extends State<NewExpense> {
     super.dispose();
   }
 
-  void _presentDatePicker() {
+  void _presentDatePicker() async {
     final now = DateTime.now();
     final firstDate = DateTime(now.year - 1, now.month, now.day);
-    showDatePicker(
+    final pickedDate = await showDatePicker(
       context: context,
       initialDate: now,
       firstDate: firstDate,
       lastDate: now,
     );
+    setState(() {
+      _selectedDate = pickedDate;
+    });
   }
 
   @override
@@ -67,10 +73,16 @@ class _NewExpenseState extends State<NewExpense> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      const Text('Selected Date'),
+                      Text(
+                        _selectedDate == null
+                            ? 'No date selected'
+                            // exccalamation to tell dart that the value is ensured not null
+                            : formatter.format(_selectedDate!),
+                      ),
                       IconButton(
-                          onPressed: _presentDatePicker,
-                          icon: const Icon(Icons.calendar_month))
+                        onPressed: _presentDatePicker,
+                        icon: const Icon(Icons.calendar_month),
+                      )
                     ],
                   ),
                 ),
