@@ -5,7 +5,9 @@ import 'package:intl/intl.dart';
 final formatter = DateFormat.yMd();
 
 class NewExpense extends StatefulWidget {
-  const NewExpense({super.key});
+  const NewExpense({super.key, required this.onAddExpense});
+
+  final void Function(Expense expense) onAddExpense;
 
   @override
   State<StatefulWidget> createState() {
@@ -20,6 +22,41 @@ class _NewExpenseState extends State<NewExpense> {
 
   DateTime? _selectedDate;
   Category _selectedCategory = Category.leisure;
+
+  void _submitExpenseData() {
+    // tryParse('Hello') => null
+    final enteredAmount = double.tryParse(_amountController.text);
+    final amountIsInvalid = enteredAmount == null || enteredAmount <= 0;
+    if (_titleController.text.trim().isEmpty ||
+        amountIsInvalid ||
+        _selectedDate == null) {
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text('Invalid Input'),
+          content: const Text('Please enter a valid title, amount and date'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(ctx);
+              },
+              child: const Text('Okay'),
+            ),
+          ],
+        ),
+      );
+      return;
+    }
+
+    widget.onAddExpense(
+      Expense(
+        title: _titleController.text,
+        amount: enteredAmount,
+        date: _selectedDate!,
+        category: _selectedCategory,
+      ),
+    );
+  }
 
   // to dispose the TextEditingController when its not being used
   // to avoid memory leaks
@@ -122,10 +159,7 @@ class _NewExpenseState extends State<NewExpense> {
                   child: const Text('Cancel'),
                 ),
                 ElevatedButton(
-                  onPressed: () {
-                    print(_titleController.text);
-                    print(_amountController.text);
-                  },
+                  onPressed: _submitExpenseData,
                   child: const Text('Save Expense'),
                 ),
               ],
