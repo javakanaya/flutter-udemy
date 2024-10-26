@@ -56,6 +56,7 @@ class _NewExpenseState extends State<NewExpense> {
         category: _selectedCategory,
       ),
     );
+    Navigator.pop(context);
   }
 
   // to dispose the TextEditingController when its not being used

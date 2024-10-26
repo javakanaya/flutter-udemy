@@ -31,6 +31,7 @@ class _ExprensesState extends State<Expenses> {
   void _openAddExpenseOverlay() {
     // globaly context variable because it's a stateful widget
     showModalBottomSheet(
+        isScrollControlled: true,
         context: context,
         builder: (ctx) => NewExpense(
               onAddExpense: _addExpense,
