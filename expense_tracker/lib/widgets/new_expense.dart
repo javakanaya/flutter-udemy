@@ -152,8 +152,8 @@ class _NewExpenseState extends State<NewExpense> {
                         _selectedCategory = value;
                       });
                     }),
-                Spacer(),
-                ElevatedButton(
+                const Spacer(),
+                TextButton(
                   onPressed: () {
                     Navigator.pop(context);
                   },
