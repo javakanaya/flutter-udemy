@@ -11,10 +11,11 @@ var kDarkColorScheme = ColorScheme.fromSeed(
   seedColor: const Color.fromARGB(255, 6, 84, 137),
 );
 void main() {
-  WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-  ]).then((fn) {
+  /// to make it lock the orientation to portrait mode
+  // WidgetsFlutterBinding.ensureInitialized();
+  // SystemChrome.setPreferredOrientations([
+  //   DeviceOrientation.portraitUp,
+  // ]).then((fn) {
     runApp(
       MaterialApp(
         // copyWith() is to create a new ThemeData object with the specified changes
@@ -55,5 +56,5 @@ void main() {
         home: const Expenses(),
       ),
     );
-  });
+  // });
 }
