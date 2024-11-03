@@ -36,6 +36,7 @@ class _KeysState extends State<Keys> {
   ];
 
   List<Todo> get _orderedTodos {
+    // create a copy, not a reference
     final sortedTodos = List.of(_todos);
     sortedTodos.sort((a, b) {
       final bComesAfterA = a.text.compareTo(b.text);
@@ -65,15 +66,18 @@ class _KeysState extends State<Keys> {
           ),
         ),
         Expanded(
-            child: Column(
-          children: [
-            for (final todo in _orderedTodos)
-              TodoItem(
-                todo.text,
-                todo.priority,
-              ),
-          ],
-        ))
+          child: Column(
+            children: [
+              for (final todo in _orderedTodos)
+                CheckableTodoItem(
+                  // key to make sure the state is following the widget
+                  key: ObjectKey(todo), // or ValueKey(todo.text),
+                  todo.text,
+                  todo.priority,
+                ),
+            ],
+          ),
+        )
       ],
     );
   }
