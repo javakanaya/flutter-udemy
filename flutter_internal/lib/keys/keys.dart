@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_internals/keys/todo_item.dart';
+import 'package:flutter_internal/keys/checkable_todo_item.dart';
+import 'package:flutter_internal/keys/todo_item.dart';
 
 class Todo {
   Todo(this.text, this.priority);
