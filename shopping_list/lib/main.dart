@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
         ),
         scaffoldBackgroundColor: const Color.fromARGB(255, 38, 38, 38),
       ),
-      home: GroceryList(),
+      home: const GroceryList(),
     );
   }
 }
