@@ -27,6 +27,7 @@ class _GroceryListState extends State<GroceryList> {
   void _loadItems() async {
     final url = Uri.https('firebasedatabase.app', 'shopping-list.json');
 
+    try {
     final response = await http.get(url);
 
     if (response.statusCode >= 400) {
@@ -67,6 +68,11 @@ class _GroceryListState extends State<GroceryList> {
       _groceryItems = loadedItems;
       _isLoading = false;
     });
+    } catch (e) {
+      setState(() {
+        _error = 'Something went wrong! Please try again later';
+      });
+    }
   }
 
   void _addItem() async {
