@@ -28,7 +28,9 @@ class _NewItemState extends State<NewItem> {
         _isSending = true;
       });
 
-      final url = Uri.https('firebasedatabase.app', 'shopping-list.json');
+      final url = Uri.https(
+          'flutter-prep-27bb6-default-rtdb.asia-southeast1.firebasedatabase.app',
+          'shopping-list.json');
 
       final response = await http.post(
         url,
