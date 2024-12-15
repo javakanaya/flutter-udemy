@@ -1,3 +1,4 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -26,7 +27,8 @@ final theme = ThemeData().copyWith(
   ),
 );
 
-void main() {
+void main() async {
+  await dotenv.load();
   runApp(
     // from riverpod, make provider available ot the app
     const ProviderScope(

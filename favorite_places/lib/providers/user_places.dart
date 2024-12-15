@@ -7,8 +7,12 @@ class UserPlacesNotifier extends StateNotifier<List<Place>> {
   // set initial state to empty array
   UserPlacesNotifier() : super(const []);
 
-  void addPlace(String title, File image) {
-    final newPlace = Place(title: title, image: image);
+  void addPlace(String title, File image, PlaceLocation location) {
+    final newPlace = Place(
+      title: title,
+      image: image,
+      location: location,
+    );
 
     // update the state by creating a new array, instead of edit it
     state = [
