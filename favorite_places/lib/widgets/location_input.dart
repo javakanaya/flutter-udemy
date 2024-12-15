@@ -27,10 +27,11 @@ class _LocationInputState extends State<LocationInput> {
   var _isGettingLocation = false;
 
   String get locationImage {
-    // the ! ensure that it will not be null
     if (_pickedLocation == null) {
       return '';
     }
+
+    // the ! ensure that it will not be null
     final lat = _pickedLocation!.latitude;
     final lng = _pickedLocation!.longitude;
     return 'https://maps.googleapis.com/maps/api/staticmap?center=$lat,$lng&zoom=16&size=600x300&maptype=roadmap&markers=color:red%7Clabel:A%7C$lat,$lng&key=$apiKey';
