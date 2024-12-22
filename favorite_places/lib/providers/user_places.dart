@@ -26,7 +26,7 @@ class UserPlacesNotifier extends StateNotifier<List<Place>> {
   // set initial state to empty array
   UserPlacesNotifier() : super(const []);
 
-  void loadPlaces() async {
+  Future<void> loadPlaces() async {
     final db = await _getDatabase();
 
     // get all the places
