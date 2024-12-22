@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:io';
 
 import 'package:favorite_places/models/place.dart';
@@ -7,9 +8,46 @@ import 'package:path/path.dart' as path;
 import 'package:sqflite/sqflite.dart' as sql;
 import 'package:sqflite/sqlite_api.dart';
 
+Future<Database> _getDatabase() async {
+  // initalize the database
+  final dbPath = await sql.getDatabasesPath();
+  final db = await sql.openDatabase(
+    path.join(dbPath, 'places.db'), // db name should ended with .db
+    onCreate: (db, version) {
+      return db.execute('CREATE TABLE user_places(id TEXT PRIMARY KEY, title TEXT, image TEXT, lat REAL, lng REAL, address TEXT)');
+    },
+    version: 1,
+  );
+
+  return db;
+}
+
 class UserPlacesNotifier extends StateNotifier<List<Place>> {
   // set initial state to empty array
   UserPlacesNotifier() : super(const []);
+
+  void loadPlaces() async {
+    final db = await _getDatabase();
+
+    // get all the places
+    final data = await db.query('user_places');
+    final places = data
+        .map(
+          (row) => Place(
+            id: row['id'] as String,
+            title: row['title'] as String,
+            image: File(row['image'] as String),
+            location: PlaceLocation(
+              latitude: row['ltd'] as double,
+              longitude: row['lng'] as double,
+              address: row['address'] as String,
+            ),
+          ),
+        )
+        .toList();
+
+    state = places;
+  }
 
   void addPlace(String title, File image, PlaceLocation location) async {
     final appDir = await syspaths.getApplicationDocumentsDirectory();
@@ -22,16 +60,7 @@ class UserPlacesNotifier extends StateNotifier<List<Place>> {
       location: location,
     );
 
-    // initalize the database
-    final dbPath = await sql.getDatabasesPath();
-    final db = await sql.openDatabase(
-      path.join(dbPath, 'places.db'), // db name should ended with .db
-      onCreate: (db, version) {
-        return db.execute('CREATE TABLE user_places(id TEXT PRIMARY KEY, title TEXT, image TEXT, lat REAL, lng REAL, address TEXT)');
-      },
-      version: 1,
-    );
-
+    final db = await _getDatabase();
     // store the metadata to the local database
     db.insert('user_places', {
       'id': newPlace.id,
