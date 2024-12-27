@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+final _firebase = FirebaseAuth.instance;
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -16,13 +19,39 @@ class _AuthScreenState extends State<AuthScreen> {
   var _enteredEmail = '';
   var _enteredPassword = '';
 
-  void _submit() {
+  void _submit() async {
     final isValid = _form.currentState!.validate();
 
-    if (isValid) {
-      _form.currentState!.save();
-      print(_enteredEmail);
-      print(_enteredPassword);
+    if (!isValid) {
+      return;
+    }
+
+    _form.currentState!.save();
+    try {
+      if (_isLogin) {
+        // log users in
+        final userCredentials = await _firebase.signInWithEmailAndPassword(email: _enteredEmail, password: _enteredPassword);
+        print(userCredentials);
+      } else {
+        // create new user
+
+        final userCredentials = await _firebase.createUserWithEmailAndPassword(email: _enteredEmail, password: _enteredPassword);
+        print(userCredentials);
+      }
+      // on FirebaseAuthException setting to catch the specific error
+    } on FirebaseAuthException catch (error) {
+      // you can set specific error message for each case
+      if (error.code == 'email-already-in-use') {
+        // ...
+      }
+
+      // set default message to all error
+      ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(error.message ?? 'Authentication Failed.'),
+        ),
+      );
     }
   }
 
@@ -99,9 +128,9 @@ class _AuthScreenState extends State<AuthScreen> {
                           const SizedBox(height: 12),
                           ElevatedButton(
                             onPressed: _submit,
-                            // style: ElevatedButton.styleFrom(
-                            //   backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-                            // ),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+                            ),
                             child: Text(
                               _isLogin ? 'Login' : 'Signup',
                             ),
