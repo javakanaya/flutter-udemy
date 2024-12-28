@@ -1,3 +1,4 @@
+import 'package:chat_app/widgets/user_image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -85,6 +86,7 @@ class _AuthScreenState extends State<AuthScreen> {
                       child: Column(
                         mainAxisSize: MainAxisSize.min, // take as much space needed by the content
                         children: [
+                          if (!_isLogin) UserImagePicker(),
                           // EMAIL
                           TextFormField(
                             decoration: InputDecoration(
